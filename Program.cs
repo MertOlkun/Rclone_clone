@@ -21,7 +21,9 @@ string? selectedFile = filePath.selectFile();
 string[] sf_name = selectedFile.Split('/');
 string filename = sf_name[sf_name.Count() - 1];
 
+string token = string.Empty;
 string? folderName = string.Empty;
+int? Offset;
 
 HttpListener listener = new();
 listener.Prefixes.Add("http://localhost:5081/");
@@ -36,7 +38,7 @@ Process.Start(
         UseShellExecute = true,
     }
 );
-string token = "";
+
 
 HttpListenerContext httpContext = listener.GetContext();
 if (httpContext.Request.Url is not null)
@@ -147,6 +149,7 @@ using (
     string session_id = json["session_id"];
 
     pid_upload_session = session_id;
+    Offset = byteFile.Count();
 }
 
 string ArgJson_finish = JsonSerializer.Serialize(
@@ -160,7 +163,7 @@ string ArgJson_finish = JsonSerializer.Serialize(
             path = $"/{folderName}/{filename}",
             strict_conflict = false,
         },
-        cursor = new { offset = 14, session_id = pid_upload_session },
+        cursor = new { offset = Offset, session_id = pid_upload_session },
     }
 );
 
@@ -174,6 +177,8 @@ string ArgJson_finish = JsonSerializer.Serialize(
     request.Headers.TryAddWithoutValidation("Authorization", $"Bearer {token}");
     request.Headers.TryAddWithoutValidation("Dropbox-API-Arg", ArgJson_finish);
     var byteFile = File.ReadAllBytes(selectedFile);
+   
+    
     request.Content = new ByteArrayContent(byteFile);
     request.Content.Headers.ContentType = MediaTypeHeaderValue.Parse("application/octet-stream");
 
