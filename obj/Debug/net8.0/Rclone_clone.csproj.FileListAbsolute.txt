@@ -17,3 +17,8 @@
 /home/mert/Rclone_clone/obj/Debug/net8.0/Rclone_clone.pdb
 /home/mert/Rclone_clone/obj/Debug/net8.0/Rclone_clone.genruntimeconfig.cache
 /home/mert/Rclone_clone/obj/Debug/net8.0/ref/Rclone_clone.dll
+/home/mert/Rclone_clone/bin/Debug/net8.0/DotNetEnv.dll
+/home/mert/Rclone_clone/bin/Debug/net8.0/Microsoft.Extensions.Configuration.dll
+/home/mert/Rclone_clone/bin/Debug/net8.0/Microsoft.Extensions.Configuration.Abstractions.dll
+/home/mert/Rclone_clone/bin/Debug/net8.0/Microsoft.Extensions.Primitives.dll
+/home/mert/Rclone_clone/bin/Debug/net8.0/Sprache.dll
