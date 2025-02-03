@@ -30,6 +30,22 @@ public class FilePathSelector
             }
         }
     }
+
+    public string Filename(string path)
+    {
+        string[] sf_name;
+        if (path.Contains('\\'))
+        {
+            sf_name = path.Split('\\');
+        }
+        else
+        {
+            sf_name = path.Split('/');
+        }
+        string filename = sf_name[sf_name.Count() - 1];
+
+        return filename;
+    }
 }
 
 public class Entries

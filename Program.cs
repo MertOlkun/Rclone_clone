@@ -17,9 +17,7 @@ string? appSecret = Environment.GetEnvironmentVariable("DropboxClient_secret");
 
 FilePathSelector filePath = new();
 string? selectedFile = filePath.selectFile();
-
-string[] sf_name = selectedFile.Split('/');
-string filename = sf_name[sf_name.Count() - 1];
+string fileName = filePath.Filename(selectedFile);
 
 string token = string.Empty;
 string? folderName = string.Empty;
@@ -67,8 +65,11 @@ if (httpContext.Request.Url is not null)
         var response = await httpClient.SendAsync(request);
         string responseBody = await response.Content.ReadAsStringAsync();
         var data = JsonSerializer.Deserialize<Dictionary<string, object>>(responseBody);
-        string? token1 = data["access_token"].ToString();
-        token = token1 ?? string.Empty;
+        if (data != null)
+        {
+            string? token1 = data["access_token"].ToString();
+             token = token1 ?? string.Empty;
+        }
     }
 }
 
@@ -144,8 +145,8 @@ using (
 
     var responseBody = await response.Content.ReadAsStringAsync();
 
-    var json = JsonSerializer.Deserialize<Dictionary<string, string>>(responseBody);
-
+    var json = JsonSerializer.Deserialize<Dictionary<string, string>>(responseBody) ;
+    
     string session_id = json["session_id"];
 
     pid_upload_session = session_id;
@@ -160,7 +161,7 @@ string ArgJson_finish = JsonSerializer.Serialize(
             autorename = true,
             mode = "add",
             mute = false,
-            path = $"/{folderName}/{filename}",
+            path = $"/{folderName}/{fileName}",
             strict_conflict = false,
         },
         cursor = new { offset = Offset, session_id = pid_upload_session },
