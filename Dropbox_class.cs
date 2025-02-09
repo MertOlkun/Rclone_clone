@@ -32,7 +32,7 @@ public class Dropbox_class
             new ProcessStartInfo()
             {
                 FileName =
-                    "https://www.dropbox.com/oauth2/authorize?client_id=jbnnlr6pfg1o5wu&redirect_uri=http://localhost:5081/&response_type=code",
+                    $"https://www.dropbox.com/oauth2/authorize?client_id={appKey}&redirect_uri=http://localhost:5081/&response_type=code",
                 UseShellExecute = true,
             }
         );
