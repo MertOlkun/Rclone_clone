@@ -3,7 +3,7 @@ public class FilePathSelector
     public string selectFile()
     {
         Console.WriteLine(
-            $"\nif you want to select file, add '-' in front of the path.\n example: -{Directory.GetCurrentDirectory()}\nif you want to search file, write a path.\n example: /home/name/folder\n"
+            $"\n*if you want to select file, add '-' in front of the path.\n example: -{Directory.GetCurrentDirectory()}\n*if you want to search file, write a path.\n example: /home/name/folder\n"
         );
         while (true)
         {
