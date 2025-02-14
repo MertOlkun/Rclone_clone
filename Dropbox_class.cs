@@ -88,70 +88,50 @@ public class Dropbox_class
         }
     }
 
-    public void sdsd()
-    {
-        /* string a = "asdfghjklş";
-        string b = "asdf";
-        string x = a-b;
-        string[] y; 
-        if (selectedFile.Contains('\\'))
-        {
-           y =  selectedFile.Split('\\');
-        }else
-        {
-           y = selectedFile.Split('/');
-        }
-       Console.WriteLine( y.Last());
-        string s = y.Last(); */
-
-        var xs = Directory.GetDirectories(selectedFile, "*",SearchOption.AllDirectories);
-        foreach (var item in xs)
-        {
-            System.Console.WriteLine(item);
-            //s+= ""+ item.Split("/").Last();
-
-        } 
-    }
-
     public async Task CreateFolder()
-    {    
-
-        string[] allDirectories = Directory.GetDirectories(selectedFile, "*",SearchOption.AllDirectories);
+    {
+        string[] allDirectories = Directory.GetDirectories(
+            selectedFile,
+            "*",
+            SearchOption.AllDirectories
+        );
         string? slash;
-        if (selectedFile.Contains("/"))
-        {
-            slash = "/";
-        }
-        else
+        if (selectedFile.Contains("\\"))
         {
             slash = "\\";
         }
-        
-          string a = selectedFile.Split(slash)[selectedFile.Split(slash).Count()-1];
-            string b = selectedFile.Split(a)[0];
-         foreach (var item in allDirectories)
+        else
         {
-          string deletedString =item.Replace(b,slash);
+            slash = "/";
+        }
+
+        string a = selectedFile.Split(slash)[selectedFile.Split(slash).Count() - 1];
+        string b = selectedFile.Split(a)[0];
+        foreach (var item in allDirectories)
+        {
+            string deletedString = item.Replace(b, "/");
             string ArgJson_create_folder = JsonSerializer.Serialize(
-            new { autorename = false, path = deletedString}
-        );
-        using (
-            var request = new HttpRequestMessage(
-                new HttpMethod("POST"),
-                "https://api.dropboxapi.com/2/files/create_folder_v2"
+                new { autorename = false, path = deletedString.Replace("\\", "/") }
+            );
+            using (
+                var request = new HttpRequestMessage(
+                    new HttpMethod("POST"),
+                    "https://api.dropboxapi.com/2/files/create_folder_v2"
+                )
             )
-        )        
-        {
-            request.Headers.TryAddWithoutValidation($"Authorization", $"Bearer {token1}");
+            {
+                request.Headers.TryAddWithoutValidation($"Authorization", $"Bearer {token1}");
 
-            request.Content = new StringContent(ArgJson_create_folder);
-            request.Content.Headers.ContentType = MediaTypeHeaderValue.Parse("application/json");
+                request.Content = new StringContent(ArgJson_create_folder);
+                request.Content.Headers.ContentType = MediaTypeHeaderValue.Parse(
+                    "application/json"
+                );
 
-            var response = await httpClient.SendAsync(request);
-            var responsebody = await response.Content.ReadAsStringAsync();
-            System.Console.WriteLine(responsebody);   
-        }     
-        } 
+                var response = await httpClient.SendAsync(request);
+                var responsebody = await response.Content.ReadAsStringAsync();
+                Console.WriteLine(responsebody);
+            }
+        }
     }
 
     public async Task ListFolder()

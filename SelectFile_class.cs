@@ -24,8 +24,7 @@ public class FilePathSelector
             }
             else if (dir.StartsWith('-') == true)
             {
-                string[] x = dir.Split('-');
-                string pathString = x[1];
+                string pathString = dir.Remove(0, 1);
                 return pathString;
             }
         }
@@ -46,7 +45,6 @@ public class FilePathSelector
 
         return filename;
     }
-    
 }
 
 public class Entries
