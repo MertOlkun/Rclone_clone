@@ -1,26 +1,38 @@
 using System.Diagnostics;
 using System.Net;
 using System.Net.Http.Headers;
+using System.Reflection.Metadata;
 using System.Text.Json;
 
 public class Dropbox_class
 {
-    HttpListener listener;
-    HttpClient httpClient;
-    string appKey;
-    string appSecret;
-    string selectedFile;
-    string fileName;
-    
-    public Dropbox_class(HttpListener listener,HttpClient httpClient,string appKey,string appSecret,string selectedFile,string fileName)
+    readonly HttpListener listener;
+    readonly HttpClient httpClient;
+    readonly string appKey;
+    readonly string appSecret;
+    readonly string hostAndPort;
+    readonly string selectedFile;
+    readonly string fileName;
+
+    public Dropbox_class(
+        HttpListener listener,
+        HttpClient httpClient,
+        string appKey,
+        string appSecret,
+        string hostAndPort,
+        string selectedFile,
+        string fileName
+    )
     {
         this.listener = listener;
         this.httpClient = httpClient;
         this.appKey = appKey;
         this.appSecret = appSecret;
+        this.hostAndPort = hostAndPort;
         this.selectedFile = selectedFile;
         this.fileName = fileName;
     }
+
     string? folderName = string.Empty;
     string? token1 = string.Empty;
     string pid_upload_session = string.Empty;
@@ -32,11 +44,10 @@ public class Dropbox_class
             new ProcessStartInfo()
             {
                 FileName =
-                    $"https://www.dropbox.com/oauth2/authorize?client_id={appKey}&redirect_uri=http://localhost:5081/&response_type=code",
+                    $"https://www.dropbox.com/oauth2/authorize?client_id={appKey}&redirect_uri={hostAndPort}&response_type=code",
                 UseShellExecute = true,
             }
         );
-        
     }
 
     public async Task GetToken()
@@ -52,14 +63,13 @@ public class Dropbox_class
                     new HttpMethod("POST"),
                     "https://api.dropbox.com/oauth2/token"
                 )
-                
             )
             {
                 var contentList = new List<string>();
-                
+
                 contentList.Add($"code={code}");
                 contentList.Add("grant_type=authorization_code");
-                contentList.Add("redirect_uri=http://localhost:5081/");
+                contentList.Add($"redirect_uri={hostAndPort}");
                 contentList.Add($"client_id={appKey}");
                 contentList.Add($"client_secret={appSecret}");
                 request.Content = new StringContent(string.Join("&", contentList));
@@ -73,13 +83,75 @@ public class Dropbox_class
                 if (data != null)
                 {
                     token1 = data["access_token"].ToString();
-                    
                 }
-               
             }
-            
         }
-         
+    }
+
+    public void sdsd()
+    {
+        /* string a = "asdfghjklş";
+        string b = "asdf";
+        string x = a-b;
+        string[] y; 
+        if (selectedFile.Contains('\\'))
+        {
+           y =  selectedFile.Split('\\');
+        }else
+        {
+           y = selectedFile.Split('/');
+        }
+       Console.WriteLine( y.Last());
+        string s = y.Last(); */
+
+        var xs = Directory.GetDirectories(selectedFile, "*",SearchOption.AllDirectories);
+        foreach (var item in xs)
+        {
+            System.Console.WriteLine(item);
+            //s+= ""+ item.Split("/").Last();
+
+        } 
+    }
+
+    public async Task CreateFolder()
+    {    
+
+        string[] allDirectories = Directory.GetDirectories(selectedFile, "*",SearchOption.AllDirectories);
+        string? slash;
+        if (selectedFile.Contains("/"))
+        {
+            slash = "/";
+        }
+        else
+        {
+            slash = "\\";
+        }
+        
+          string a = selectedFile.Split(slash)[selectedFile.Split(slash).Count()-1];
+            string b = selectedFile.Split(a)[0];
+         foreach (var item in allDirectories)
+        {
+          string deletedString =item.Replace(b,slash);
+            string ArgJson_create_folder = JsonSerializer.Serialize(
+            new { autorename = false, path = deletedString}
+        );
+        using (
+            var request = new HttpRequestMessage(
+                new HttpMethod("POST"),
+                "https://api.dropboxapi.com/2/files/create_folder_v2"
+            )
+        )        
+        {
+            request.Headers.TryAddWithoutValidation($"Authorization", $"Bearer {token1}");
+
+            request.Content = new StringContent(ArgJson_create_folder);
+            request.Content.Headers.ContentType = MediaTypeHeaderValue.Parse("application/json");
+
+            var response = await httpClient.SendAsync(request);
+            var responsebody = await response.Content.ReadAsStringAsync();
+            System.Console.WriteLine(responsebody);   
+        }     
+        } 
     }
 
     public async Task ListFolder()
@@ -114,7 +186,7 @@ public class Dropbox_class
             var responseBody = await response.Content.ReadAsStringAsync();
             var option = new JsonSerializerOptions { PropertyNameCaseInsensitive = true };
             var json = JsonSerializer.Deserialize<Name>(responseBody, option);
-            if (json != null)
+            if (json != null && json.Entries != null)
             {
                 Console.WriteLine("\n\n\nDropbox folders:\n");
                 foreach (var item in json.Entries)
@@ -144,6 +216,7 @@ public class Dropbox_class
             request.Headers.TryAddWithoutValidation("Authorization", $"Bearer {token1}");
             request.Headers.TryAddWithoutValidation("Dropbox-API-Arg", ArgJson_start);
             var byteFile = File.ReadAllBytes(selectedFile); //add a selectedFile varible
+
             request.Content = new ByteArrayContent(byteFile);
             request.Content.Headers.ContentType = MediaTypeHeaderValue.Parse(
                 "application/octet-stream"
@@ -153,11 +226,12 @@ public class Dropbox_class
             var responseBody = await response.Content.ReadAsStringAsync();
 
             var json = JsonSerializer.Deserialize<Dictionary<string, string>>(responseBody);
-
-            string session_id = json["session_id"];
-
-            pid_upload_session = session_id;
-            offset = byteFile.Count();
+            if (json != null)
+            {
+                string session_id = json["session_id"];
+                pid_upload_session = session_id;
+                offset = byteFile.Count();
+            }
         }
     }
 
@@ -196,7 +270,14 @@ public class Dropbox_class
             var response = await httpClient.SendAsync(request);
 
             var responseBody = await response.Content.ReadAsStringAsync();
-            Console.WriteLine("\n\n\nDone!\n" + responseBody);
+            if (responseBody[2].ToString() == "e")
+            {
+                Console.WriteLine("\n\n\nError!\n" + responseBody);
+            }
+            else
+            {
+                Console.WriteLine("\n\n\nDone!\n" + responseBody);
+            }
         }
     }
 }
