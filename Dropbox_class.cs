@@ -348,7 +348,6 @@ public class Dropbox_class
                 Console.WriteLine(responseBody);
             }
         }
-        System.Console.WriteLine("asfsdff");
     }
 
     public async Task UploadSession()
