@@ -95,6 +95,12 @@ public class Dropbox_class
 
     public async Task CreateFolder()
     {
+        string slash = "/";
+
+        if (selectedFile.Contains('\\'))
+        {
+            slash = "\\";
+        }
         if (Directory.Exists(selectedFile))
         {
             string[] allDirectories = Directory.GetDirectories(
@@ -102,15 +108,6 @@ public class Dropbox_class
                 "*",
                 SearchOption.AllDirectories
             );
-            string? slash;
-            if (selectedFile.Contains("\\"))
-            {
-                slash = "\\";
-            }
-            else
-            {
-                slash = "/";
-            }
 
             string a = selectedFile.Split(slash)[selectedFile.Split(slash).Count() - 1];
             string b = selectedFile.Split(a)[0];
@@ -206,6 +203,12 @@ public class Dropbox_class
         List<string> modifiedItem = [];
         List<string> filePathList = [];
         IDictionary<string, string> hashDictionary = new Dictionary<string, string>();
+        string slash = "/";
+
+        if (selectedFile.Contains('\\'))
+        {
+            slash = "\\";
+        }
 
         foreach (var item in File.ReadAllText("FolderPaths.txt").Split('*'))
         {
@@ -303,7 +306,6 @@ public class Dropbox_class
             }
         }
         var hashDiff = hash1.Except(hash2).ToList();
-
         for (int i = 0; i < hashDictionary.Count; i++)
         {
             for (int k = 0; k < hashDiff.Count; k++)
@@ -318,7 +320,11 @@ public class Dropbox_class
         {
             foreach (var item in modifiedFilePath)
             {
-                if (modifiedItem[i].Contains(item.Split("/")[item.Split("/").Length - 1]))
+                if (item.Contains("\\"))
+                {
+                    slash = "\\";
+                }
+                if (modifiedItem[i].Contains(item.Split(slash)[item.Split(slash).Length - 1]))
                 {
                     entries.Add(new { path = modifiedItem[i] });
                     Console.WriteLine("Synchronizing file named :" + modifiedItem[i]);
