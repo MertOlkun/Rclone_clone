@@ -1,20 +1,20 @@
 {
   "format": 1,
   "restore": {
-    "/home/mert/Rclone_clone/Rclone_clone.csproj": {}
+    "C:\\Users\\Acer\\Desktop\\Rclone_clone-main\\Rclone_clone\\Rclone_clone.csproj": {}
   },
   "projects": {
-    "/home/mert/Rclone_clone/Rclone_clone.csproj": {
+    "C:\\Users\\Acer\\Desktop\\Rclone_clone-main\\Rclone_clone\\Rclone_clone.csproj": {
       "version": "1.0.0",
       "restore": {
-        "projectUniqueName": "/home/mert/Rclone_clone/Rclone_clone.csproj",
+        "projectUniqueName": "C:\\Users\\Acer\\Desktop\\Rclone_clone-main\\Rclone_clone\\Rclone_clone.csproj",
         "projectName": "Rclone_clone",
-        "projectPath": "/home/mert/Rclone_clone/Rclone_clone.csproj",
-        "packagesPath": "/home/mert/.nuget/packages/",
-        "outputPath": "/home/mert/Rclone_clone/obj/",
+        "projectPath": "C:\\Users\\Acer\\Desktop\\Rclone_clone-main\\Rclone_clone\\Rclone_clone.csproj",
+        "packagesPath": "C:\\Users\\Acer\\.nuget\\packages\\",
+        "outputPath": "C:\\Users\\Acer\\Desktop\\Rclone_clone-main\\Rclone_clone\\obj\\",
         "projectStyle": "PackageReference",
         "configFilePaths": [
-          "/home/mert/.nuget/NuGet/NuGet.Config"
+          "C:\\Users\\Acer\\AppData\\Roaming\\NuGet\\NuGet.Config"
         ],
         "originalTargetFrameworks": [
           "net8.0"
@@ -37,7 +37,8 @@
           "enableAudit": "true",
           "auditLevel": "low",
           "auditMode": "direct"
-        }
+        },
+        "SdkAnalysisLevel": "9.0.100"
       },
       "frameworks": {
         "net8.0": {
@@ -63,12 +64,30 @@
           ],
           "assetTargetFallback": true,
           "warn": true,
+          "downloadDependencies": [
+            {
+              "name": "Microsoft.AspNetCore.App.Ref",
+              "version": "[8.0.11, 8.0.11]"
+            },
+            {
+              "name": "Microsoft.NETCore.App.Host.win-x64",
+              "version": "[8.0.11, 8.0.11]"
+            },
+            {
+              "name": "Microsoft.NETCore.App.Ref",
+              "version": "[8.0.11, 8.0.11]"
+            },
+            {
+              "name": "Microsoft.WindowsDesktop.App.Ref",
+              "version": "[8.0.11, 8.0.11]"
+            }
+          ],
           "frameworkReferences": {
             "Microsoft.NETCore.App": {
               "privateAssets": "all"
             }
           },
-          "runtimeIdentifierGraphPath": "/usr/share/dotnet/sdk/8.0.401/PortableRuntimeIdentifierGraph.json"
+          "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\9.0.101/PortableRuntimeIdentifierGraph.json"
         }
       }
     }

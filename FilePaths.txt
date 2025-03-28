@@ -1,1 +1,1 @@
-/test/test123/test.txt*/test/test123/mert*/test/test321/asdas.txt*/.bash_history*
+/test/test123/test.txt*/test/test123/mert*/test/test321/asdas.txt*/.bash_history*/bilgisayarda yüklü programlar.txt*

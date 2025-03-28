@@ -316,6 +316,7 @@ public class Dropbox_class
                 }
             }
         }
+
         for (int i = 0; i < modifiedItem.Count; i++)
         {
             foreach (var item in modifiedFilePath)
@@ -360,7 +361,6 @@ public class Dropbox_class
     {
         List<int> indexList = [];
         string[] splittedFilePath;
-        string last_file = string.Empty;
         List<object> entries = [];
         string slash = "/";
 
@@ -387,14 +387,8 @@ public class Dropbox_class
         if (selectedFile == "//sync")
         {
             allFiles = modifiedFilePath.ToArray<string>();
-
-            if (selectedFile.Contains("\\"))
-            {
-                slash = "\\";
-            }
         }
         int number = 0;
-
         string filePaths = File.ReadAllText(filePathsTxt);
         if (selectedFile == "//sync")
         {
@@ -402,9 +396,13 @@ public class Dropbox_class
 
             for (int i = 0; i < allFiles.Length; i++)
             {
-                last_file = allFiles[i].Split("/")[allFiles[i].Split("/").Length - 1];
+                if (allFiles[i].Contains("\\"))
+                {
+                    slash = "\\";
+                }
+                string last_file = allFiles[i].Split(slash)[allFiles[i].Split(slash).Length - 1];
 
-                for (int t = 0; t < filePaths.Split('*').Length - 1; t++)
+                for (int t = 0; t < splittedFilePath.Length - 1; t++)
                 {
                     if (splittedFilePath[t].Contains(last_file))
                     {
