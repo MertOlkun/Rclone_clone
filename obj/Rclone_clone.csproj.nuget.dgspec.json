@@ -1,17 +1,17 @@
 {
   "format": 1,
   "restore": {
-    "C:\\Users\\Acer\\Desktop\\Rclone_clone-main\\Rclone_clone\\Rclone_clone.csproj": {}
+    "C:\\Users\\Acer\\Desktop\\Rclone_clone\\Rclone_clone.csproj": {}
   },
   "projects": {
-    "C:\\Users\\Acer\\Desktop\\Rclone_clone-main\\Rclone_clone\\Rclone_clone.csproj": {
+    "C:\\Users\\Acer\\Desktop\\Rclone_clone\\Rclone_clone.csproj": {
       "version": "1.0.0",
       "restore": {
-        "projectUniqueName": "C:\\Users\\Acer\\Desktop\\Rclone_clone-main\\Rclone_clone\\Rclone_clone.csproj",
+        "projectUniqueName": "C:\\Users\\Acer\\Desktop\\Rclone_clone\\Rclone_clone.csproj",
         "projectName": "Rclone_clone",
-        "projectPath": "C:\\Users\\Acer\\Desktop\\Rclone_clone-main\\Rclone_clone\\Rclone_clone.csproj",
+        "projectPath": "C:\\Users\\Acer\\Desktop\\Rclone_clone\\Rclone_clone.csproj",
         "packagesPath": "C:\\Users\\Acer\\.nuget\\packages\\",
-        "outputPath": "C:\\Users\\Acer\\Desktop\\Rclone_clone-main\\Rclone_clone\\obj\\",
+        "outputPath": "C:\\Users\\Acer\\Desktop\\Rclone_clone\\obj\\",
         "projectStyle": "PackageReference",
         "configFilePaths": [
           "C:\\Users\\Acer\\AppData\\Roaming\\NuGet\\NuGet.Config"
