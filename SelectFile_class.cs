@@ -1,4 +1,3 @@
-
 using System.Reflection;
 using System.Reflection.Emit;
 
@@ -12,7 +11,7 @@ public class FilePathSelector
         while (true)
         {
             string dir = Console.ReadLine() ?? "Null";
-            if (dir=="//sync")
+            if (dir == "//sync")
             {
                 return "//sync";
             }
@@ -59,8 +58,8 @@ public class Entries
 {
     public string? Name { get; set; }
     public string? Id { get; set; }
-    public string? Path_display {get;set;}
-    public string? Content_hash {get;set;}
+    public string? Path_display { get; set; }
+    public string? Content_hash { get; set; }
 }
 
 public class Name
@@ -74,16 +73,13 @@ public class PathValidator
     string selectedFile;
     public string[] allFiles = Array.Empty<string>();
 
-    public PathValidator(
-        string selectedFile
-    )
+    public PathValidator(string selectedFile)
     {
         this.selectedFile = selectedFile;
     }
 
     public string pthValid()
     {
-        
         if (Directory.Exists(selectedFile))
         {
             allFiles = Directory.GetFiles(selectedFile, "*", SearchOption.AllDirectories);
@@ -92,18 +88,15 @@ public class PathValidator
         {
             allFiles = [selectedFile];
         }
-        
-        string? slash;
-        if (selectedFile.Contains("\\"))
+
+        string slash = "/";
+
+        if (selectedFile.Contains('\\'))
         {
             slash = "\\";
-        }
-        else
-        {
-            slash = "/";
         }
         string last_item = selectedFile.Split(slash)[selectedFile.Split(slash).Count() - 1];
         string replaced_item = selectedFile.Split(last_item)[0];
         return replaced_item;
-    }    
+    }
 }
