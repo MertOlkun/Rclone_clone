@@ -1,13 +1,8 @@
-using System.ComponentModel;
 using System.Diagnostics;
-using System.Linq;
 using System.Net;
 using System.Net.Http.Headers;
-using System.Runtime.CompilerServices;
-using System.Runtime.InteropServices;
 using System.Security.Cryptography;
 using System.Text.Json;
-using System.Text.Json.Serialization;
 
 public class Dropbox_class
 {
@@ -42,6 +37,7 @@ public class Dropbox_class
     string? token = string.Empty;
     readonly List<string> pid_upload_session = new();
     readonly List<string> modifiedFilePath = new();
+    const int chunkSize = 4 * 1024 * 1024;
 
     public void ProcessStartInfo()
     {
@@ -193,8 +189,6 @@ public class Dropbox_class
         }
     }
 
-    public async Task Test() { }
-
     public async Task SyncAllFiles()
     {
         List<object> entries = [];
@@ -222,7 +216,6 @@ public class Dropbox_class
             }
         }
 
-        const int chunkSize = 4 * 1024 * 1024;
         using (SHA256 sha256 = SHA256.Create())
         {
             foreach (var filePath in filePathList)
@@ -316,7 +309,6 @@ public class Dropbox_class
                 }
             }
         }
-
         for (int i = 0; i < modifiedItem.Count; i++)
         {
             foreach (var item in modifiedFilePath)
@@ -361,8 +353,10 @@ public class Dropbox_class
     {
         List<int> indexList = [];
         string[] splittedFilePath;
-        List<object> entries = [];
+        List<object> UploadFinishEntries = [];
+        List<object> UploadAppendEntries = [];
         string slash = "/";
+        string file;
 
         if (selectedFile.Contains('\\'))
         {
@@ -387,8 +381,14 @@ public class Dropbox_class
         if (selectedFile == "//sync")
         {
             allFiles = modifiedFilePath.ToArray<string>();
+
+            if (selectedFile.Contains("\\"))
+            {
+                slash = "\\";
+            }
         }
         int number = 0;
+
         string filePaths = File.ReadAllText(filePathsTxt);
         if (selectedFile == "//sync")
         {
@@ -396,13 +396,9 @@ public class Dropbox_class
 
             for (int i = 0; i < allFiles.Length; i++)
             {
-                if (allFiles[i].Contains("\\"))
-                {
-                    slash = "\\";
-                }
-                string last_file = allFiles[i].Split(slash)[allFiles[i].Split(slash).Length - 1];
+                string last_file = allFiles[i].Split("/")[allFiles[i].Split("/").Length - 1];
 
-                for (int t = 0; t < splittedFilePath.Length - 1; t++)
+                for (int t = 0; t < filePaths.Split('*').Length - 1; t++)
                 {
                     if (splittedFilePath[t].Contains(last_file))
                     {
@@ -413,6 +409,7 @@ public class Dropbox_class
         }
         foreach (var item in allFiles)
         {
+            file = item;
             byte[] sssss = File.ReadAllBytes(item);
             long offset = sssss.Length;
             string newPath = item.Replace(replaced_item, "/");
@@ -463,7 +460,15 @@ public class Dropbox_class
                 File.AppendAllText(filePathsTxt, newPath + "*");
             }
 
-            entries.Add(
+            UploadAppendEntries.Add(
+                new
+                {
+                    close = "false",
+                    cursor = new { offset, session_id = pid_upload_session[number] },
+                }
+            );
+
+            UploadFinishEntries.Add(
                 new
                 {
                     commit = new
@@ -479,6 +484,7 @@ public class Dropbox_class
             );
             number += 1;
         }
+
         using (
             var request = new HttpRequestMessage(
                 new HttpMethod("POST"),
@@ -486,7 +492,7 @@ public class Dropbox_class
             )
         )
         {
-            var ArgJson_finish = new { entries };
+            var ArgJson_finish = new { entries = UploadFinishEntries };
             request.Headers.TryAddWithoutValidation("Authorization", $"Bearer {token}");
             request.Content = new StringContent(JsonSerializer.Serialize(ArgJson_finish));
 
